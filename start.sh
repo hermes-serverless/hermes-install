@@ -1,15 +1,46 @@
 set -euo pipefail
 
+display_info() {
+  printf "Usage ./start.sh [OPT]\nOptions are:\n"
+  printf "  -h: Show this message\n"
+  printf "  -m: Migrate\n"
+  printf "  -s: Seed\n"
+  exit 0
+}
+
+SEED=false
+MIGRATE=false
+while getopts "msh" OPT; do
+  case "$OPT" in
+    "m") MIGRATE=true;;
+    "s") SEED=true;;
+    "h") display_info;;
+    "?") display_info;;
+  esac 
+done
+
 docker network create hermes || true
 
 DOCKER_COMPOSE_OPTS="-p hermes -f prod.docker-compose.yml"
 
-docker-compose $DOCKER_COMPOSE_OPTS up -d db
-docker run --network=hermes --rm -it hermeshub/db-migrator ./scripts/migrate.sh production db:seed:undo:all
-docker-compose $DOCKER_COMPOSE_OPTS down
-
 docker-compose $DOCKER_COMPOSE_OPTS pull --no-parallel
 printf "\n"
+docker pull hermeshub/db-migrator
+printf "\n"
+
+if [ "$MIGRATE" == "true" ] || [ "$SEED" == "true" ]; then
+  docker-compose $DOCKER_COMPOSE_OPTS up -d db  
+
+  if [ "$MIGRATE" == "true" ]; then
+    docker run --network=hermes --rm -it hermeshub/db-migrator ./scripts/migrate.sh production
+  fi
+
+  if [ "$SEED" == "true" ]; then
+    docker run --network=hermes --rm -it hermeshub/db-migrator ./scripts/seed.sh production
+  fi
+
+  docker-compose $DOCKER_COMPOSE_OPTS down
+fi
 
 docker-compose $DOCKER_COMPOSE_OPTS up -d
 printf "\n"
