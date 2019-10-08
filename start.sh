@@ -29,7 +29,7 @@ docker pull hermeshub/db-migrator
 printf "\n"
 
 if [ "$MIGRATE" == "true" ] || [ "$SEED" == "true" ]; then
-  docker-compose $DOCKER_COMPOSE_OPTS up -d db  
+  docker-compose $DOCKER_COMPOSE_OPTS up -d function-registry-db 
 
   if [ "$MIGRATE" == "true" ]; then
     docker run --network=hermes --rm -it hermeshub/db-migrator ./scripts/migrate.sh production
