@@ -4,7 +4,7 @@
 - [NVIDIA Container Toolkit](https://github.com/NVIDIA/nvidia-docker): `v2.1.1` or newer 
   - [NVIDIA driver](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)
 
-## Instalation
+## Installation
 
 After making sure to have the requirements, just run the `start.sh` script and the hermes instance will start. Running it the first time requires to run with `-m` flag, to create the database tables.
 You can specify the por on which the server will listen using the `-p $PORT` flag. If not specified the server will listen on `9090`. The host will always be `localhost`.
