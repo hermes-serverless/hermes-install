@@ -5,21 +5,29 @@ display_info() {
   printf "  -h: Show this message\n"
   printf "  -m: Migrate\n"
   printf "  -s: Seed\n"
+  printf "  -p: Port to listen\n"
   exit 0
 }
 
 SEED=false
 MIGRATE=false
-while getopts "msh" OPT; do
+PORT=9090
+while getopts "mshp:" OPT; do
   case "$OPT" in
     "m") MIGRATE=true;;
     "s") SEED=true;;
+    "p") PORT=$OPTARG;;
     "h") display_info;;
     "?") display_info;;
   esac 
 done
 
 docker network create hermes || true
+
+SCRIPT=$(readlink -f $0)
+SCRIPTPATH=`dirname $SCRIPT`
+
+echo "PORT=$PORT" > $SCRIPTPATH/.env
 
 DOCKER_COMPOSE_OPTS="-p hermes -f prod.docker-compose.yml"
 
@@ -45,10 +53,8 @@ fi
 docker-compose $DOCKER_COMPOSE_OPTS up -d
 printf "\n"
 
-SCRIPT=$(readlink -f $0)
-SCRIPTPATH=`dirname $SCRIPT`
 WAIT_FOR_IT_PATH="$SCRIPTPATH/wait_for_it.tmp"
-HOST_PORT="localhost:9090"
+HOST_PORT="localhost:$PORT"
 
 if [ ! -f "$WAIT_FOR_IT_PATH" ]; then
   curl https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh --output $WAIT_FOR_IT_PATH
