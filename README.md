@@ -7,7 +7,7 @@
 ## Installation
 
 After making sure to have the requirements, just run the `start.sh` script and the hermes instance will start. Running it the first time requires to run with `-m` flag, to create the database tables.
-You can specify the por on which the server will listen using the `-p $PORT` flag. If not specified the server will listen on `9090`. The host will always be `localhost`.
+You can specify the port on which the server will listen using the `-p $PORT` flag. If not specified the server will listen on `9090`. The host will always be `localhost`.
 
 Examples:
 
@@ -15,11 +15,8 @@ Examples:
 First run, starting the server to listen on 8080:
 ./start -p 8080 -m
 
-Subsequently starts, starting the server to listen on 12345:
+After the first startup the server should be started without the -m flag, e.g:
 ./start -p 12345
 ```
 
-To stop the server gracefully just run `./stop.sh`. 
-```
-DANGER: To delete all data on that instance run `./stop.sh -v`
-```
+To stop the server gracefully just run `./stop.sh`. To delete all data on the instance run `./stop.sh -v`.
