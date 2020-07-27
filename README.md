@@ -1,3 +1,9 @@
+## About
+
+This project was made as an undergraduate thesis. All documentation on the architecture and implementation are available [here (pt-BR)](https://linux.ime.usp.br/~tiagonapoli/mac0499/). The system architecture is outlined by the following schema:
+
+<image src="./imgs/architecture.png" width="75%">
+
 ## Requirements
 
 - [Docker Engine](https://docs.docker.com/engine/): `v19.03.2` or newer
